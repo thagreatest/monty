@@ -1,36 +1,41 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "monty.h"
 
 /**
- * push - Function that pushes nodes in the stack
- * @stack: stack structure
- * @line_number: Number of instructions
+ * push - push element into the stack
+ * @stack: stack given by main
+ * @line_cnt: ammount of lines
+ *
+ * Return: void
  */
-
-void push(stack_t **stack, unsigned int line_number)
+void push(stack_t **stack, unsigned int line_cnt)
 {
-	core_stack_queue(stack, line_number, 0);
-}
+	char *n = global.argument;
 
+	if ((is_digit(n)) == 0)
+	{
+		fprintf(stderr, "L%d: usage: push integer\n", line_cnt);
+		status = EXIT_FAILURE;
+		return;
+	}
 
-/**
- * stack - Function that pushes nodes in the stack
- * @stack: stack structure
- * @line_number: Number of instructions
- */
-
-void stack(stack_t **stack, unsigned int line_number)
-{
-	core_stack_queue(stack, line_number, 1);
-}
-
-
-/**
- * queue - Function that pushes nodes in the queue
- * @stack: stack structure
- * @line_number: Number of instructions
- */
-
-void queue(stack_t **stack, unsigned int line_number)
-{
-	core_stack_queue(stack, line_number, 2);
+	if (global.data_struct == 1)
+	{
+		if (!add_node(stack, atoi(global.argument)))
+		{
+			return;
+			status = EXIT_FAILURE;
+		}
+	}
+	else
+	{
+		if (!queue_node(stack, atoi(global.argument)))
+		{
+			return;
+			status = EXIT_FAILURE;
+		}
+	}
 }

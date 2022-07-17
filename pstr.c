@@ -1,31 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "monty.h"
 
 /**
- * pstr - Function that prints string of the stack
- * @stack: stack structure
- * @line_number: number of instruction
+ * pstr - prints the contents of a stack_t stack as a string
+ * @stack: stack given by main
+ * @line_cnt: line counter for error messages
+ *
+ * Return: nothing
  */
-void pstr(stack_t **stack, UN unsigned int line_number)
+void pstr(stack_t **stack, unsigned int line_cnt __attribute__((unused)))
 {
-	stack_t *temp = NULL;
+	stack_t *current = *stack;
 
-	if (*stack == NULL)
+	while (current)
 	{
-		putchar(10);
-		return;
+		if (current->n <= 0 || current->n > 127)
+			break;
+		putchar((char) current->n);
+		current = current->next;
 	}
-
-	temp = *stack;
-
-	while (temp)
-	{
-		if (temp->n <= 0 || temp->n >= 128)
-		{
-			putchar(10);
-			return;
-		}
-		printf("%c", temp->n);
-		temp = temp->next;
-	}
-	putchar(10);
+	putchar('\n');
 }

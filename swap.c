@@ -1,42 +1,28 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "monty.h"
 
 /**
- * swap - Function that swaps top values
- * @stack: stack structure
- * @line_number: Number of instructions
+ * _sub -  substracts the first two nodes of the stack
+ * @stack: stack given by main
+ * @line_cnt: line counter
+ *
+ * Return: void
  */
-void swap(stack_t **stack, unsigned int line_number)
+void _sub(stack_t **stack, unsigned int line_cnt)
 {
-	stack_t *temp = NULL;
-	int n;
+	int result;
 
-	n = stack_len(*stack);
-	if (n < 2)
+	if (!stack || !*stack || !((*stack)->next))
 	{
-		fprintf(stderr, "L%d: can't swap, stack too short\n", line_number);
-		if (list_opcode != NULL)
-			free_list_opcode(list_opcode);
-		if (*stack != NULL)
-			free_list_stack(*stack);
-		exit(EXIT_FAILURE);
+		fprintf(stderr, "L%d: can't sub, stack too short\n", line_cnt);
+		status = EXIT_FAILURE;
+		return;
 	}
-	else if (n == 2)
-	{
-		temp = (*stack)->next;
-		(*stack)->next = NULL;
-		(*stack)->prev = temp;
-		temp->prev = NULL;
-		temp->next = *stack;
-		*stack = temp;
-	}
-	else
-	{
-		temp = (*stack)->next;
-		(*stack)->next = (*stack)->next->next;
-		(*stack)->prev = temp;
-		temp->next->prev = *stack;
-		temp->prev = NULL;
-		temp->next = *stack;
-		*stack = temp;
-	}
+
+	result = ((*stack)->next->n) - ((*stack)->n);
+	pop(stack, line_cnt);/*For top node*/
+	(*stack)->n = result;
 }

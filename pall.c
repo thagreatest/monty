@@ -1,25 +1,13 @@
 #include "monty.h"
 
 /**
- * pall - Function that prints the stack
- * @stack: stack structure
- * @line_number: number of instruction
+ * pall - prints the stack
+ * @stack: stack given by main
+ * @line_cnt: ammount of lines
+ *
+ * Return: void
  */
-
-void pall(stack_t **stack, UN unsigned int line_number)
+void pall(stack_t **stack, unsigned int line_cnt __attribute__((unused)))
 {
-	stack_t *temp = NULL;
-	int n = 0;
-
-	if (*stack == NULL)
-		return;
-
-	temp = *stack;
-
-	while (temp)
-	{
-		n = temp->n;
-		printf("%d\n", n);
-		temp = temp->next;
-	}
+	print_stack(*stack);
 }

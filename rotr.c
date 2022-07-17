@@ -1,26 +1,30 @@
 #include "monty.h"
 
 /**
- * rotr - Function that rotate the top of the stack
- * @stack: stack structure
- * @line_number: number of instruction
- */
-void rotr(stack_t **stack, UN unsigned int line_number)
+* rotr - rotates the last node of a stack_t stack
+* @stack: stack head
+* @line_count: line count
+*
+* Return: void
+*/
+void rotr(stack_t **stack, unsigned int line_count)
 {
-	stack_t *temp = NULL;
+	stack_t *bottom;
+	stack_t *prev;
 
-	if (*stack == NULL)
+	(void) line_count;
+	if (!stack || !*stack || !(*stack)->next)
 		return;
-	if ((*stack)->next == NULL)
-		return;
 
-	temp = (*stack);
-	for (; temp->next; temp = temp->next)
-		;
+	bottom = *stack;
 
-	temp->prev->next = NULL;
-	temp->next = *stack;
-	temp->prev = NULL;
-	(*stack)->prev = temp;
-	*stack = temp;
+	while (bottom->next)
+		bottom = bottom->next;
+
+	prev = bottom->prev;
+	bottom->next = *stack;
+	bottom->prev = NULL;
+	prev->next = NULL;
+	(*stack)->prev = bottom;
+	*stack = bottom;
 }

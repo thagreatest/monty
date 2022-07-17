@@ -1,31 +1,78 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "monty.h"
 
-list_t *list_opcode = NULL;
+/**
+ * error_usage - prints usage message and exits
+ *
+ * Return: nothing
+ */
+void error_usage(void)
+{
+	fprintf(stderr, "USAGE: monty file\n");
+	exit(EXIT_FAILURE);
+}
 
 /**
- * main - Main entry point for Stacks and Queues
- * @argc: Argument count for the matrix
- * @argv: Argument vector for the matrix
- * Return: 0 on success or other number if it fails
+ * file_error - prints file error message and exits
+ * @argv: argv given by manin
+ *
+ * Return: nothing
+ */
+void file_error(char *argv)
+{
+	fprintf(stderr, "Error: Can't open file %s\n", argv);
+	exit(EXIT_FAILURE);
+}
+
+int status = 0;
+/**
+ * main - entry point
+ * @argv: list of arguments passed to our program
+ * @argc: ammount of args
+ *
+ * Return: nothing
  */
 int main(int argc, char **argv)
 {
+	FILE *file;
+	size_t buf_len = 0;
+	char *buffer = NULL;
+	char *str = NULL;
 	stack_t *stack = NULL;
-	list_t *temp;
+	unsigned int line_cnt = 1;
 
+	global.data_struct = 1;
 	if (argc != 2)
+		error_usage();
+
+	file = fopen(argv[1], "r");
+
+	if (!file)
+		file_error(argv[1]);
+
+	while (getline(&buffer, &buf_len, file) != -1)
 	{
-		fprintf(stderr, "USAGE: monty file\n");
-		exit(EXIT_FAILURE);
+		if (status)
+			break;
+		if (*buffer == '\n')
+		{
+			line_cnt++;
+			continue;
+		}
+		str = strtok(buffer, " \t\n");
+		if (!str || *str == '#')
+		{
+			line_cnt++;
+			continue;
+		}
+		global.argument = strtok(NULL, " \t\n");
+		opcode(&stack, str, line_cnt);
+		line_cnt++;
 	}
-
-	get_file(argv[1]);
-
-	temp = list_opcode;
-
-	for (; temp; temp = temp->next)
-		(*ptr_opcode(temp))(&stack, temp->n);
-
-	free_all(list_opcode, stack);
-	return (0);
+	free(buffer);
+	free_stack(stack);
+	fclose(file);
+	exit(status);
 }

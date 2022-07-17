@@ -1,28 +1,28 @@
 #include "monty.h"
 
 /**
- * rotl - Function that rotate the top of the stack
- * @stack: stack structure
- * @line_number: number of instruction
- */
-
-void rotl(stack_t **stack, UN unsigned int line_number)
+* rotl - rotates the first element of the stack
+* @stack: stack head
+* @line_count: line count
+*
+* Return: void
+*/
+void rotl(stack_t **stack, unsigned int line_count)
 {
-	stack_t *temp = NULL;
+	stack_t *left;
+	stack_t *right;
 
-	if (*stack == NULL)
+	(void) line_count;
+	if (!stack || !*stack || !(*stack)->next)
 		return;
-	if ((*stack)->next == NULL)
-		return;
 
-	temp = (*stack);
-	for (; temp->next; temp = temp->next)
-		;
+	left = right = *stack;
 
-	temp->next = *stack;
-	(*stack)->prev = temp;
-	temp = (*stack)->next;
-	(*stack)->next = NULL;
-	temp->prev = NULL;
-	*stack = temp;
+	while (right->next) /* move the right pointer to the last node */
+		right = right->next;
+	right->next = left; /* a circle infinite linked list loop */
+	left->prev = right;
+	*stack = left->next; /* so we cut the link between the 0 and 1 element */
+	(*stack)->prev->next = NULL;
+	(*stack)->prev = NULL;
 }
